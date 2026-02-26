@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE = "bot-anime"
+        IMAGE = "test_bot"
         BOT_TOKEN = credentials('bot-token')
     }
 
@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/YOUR_USERNAME/bot-anime.git'
+                    url: 'https://github.com/ManjiDevs/Jenkins-test'
             }
         }
 
