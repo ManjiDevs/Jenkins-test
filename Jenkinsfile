@@ -17,7 +17,13 @@ url: 'https://github.com/ManjiDevs/Jenkins-test.git'
 
 stage('Test Code') {
 steps {
-sh 'python3 -m py_compile main.py'
+sh '''
+docker run --rm \
+-v $PWD:/app \
+-w /app \
+python:3.11-slim \
+python -m py_compile main.py
+'''
 }
 }
 
