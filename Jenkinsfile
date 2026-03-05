@@ -21,7 +21,11 @@ docker run --rm \
 -v $PWD:/app \
 -w /app \
 python:3.11-slim \
-python -m compileall .
+sh -c "
+pip install -r requirements.txt &&
+python -m compileall . &&
+python -c 'import main'
+"
 '''
 }
 }
