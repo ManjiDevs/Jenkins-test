@@ -21,7 +21,17 @@ docker run --rm \
 -v /var/jenkins_home/workspace/Test:/app \
 -w /app \
 python:3.11-slim \
-sh -c "pip install -r requirements.txt && python -m compileall . && python -c 'import main'"
+pip install -r requirements.txt
+docker run --rm \
+-v /var/jenkins_home/workspace/Test:/app \
+-w /app \
+python:3.11-slim \
+python -m compileall .
+docker run --rm \
+-v /var/jenkins_home/workspace/Test:/app \
+-w /app \
+python:3.11-slim \
+python -c "import main"
 '''
 }
 }
