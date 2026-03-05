@@ -15,15 +15,15 @@ git branch: 'main', url: 'https://github.com/ManjiDevs/Jenkins-test.git'
 }
 
 stage('Test Code') {
-    steps {
-        sh '''
-        docker run --rm \
-          -v "$PWD:/app" \
-          -w /app \
-          python:3.11-slim \
-          sh -c "pip install -r requirements.txt && python -m compileall . && python -c 'import main'"
-        '''
-    }
+steps {
+sh '''
+docker run --rm \
+-v /var/jenkins_home/workspace/Test:/app \
+-w /app \
+python:3.11-slim \
+sh -c "pip install -r requirements.txt && python -m compileall . && python -c 'import main'"
+'''
+}
 }
 
 stage('Build Docker Image') {
