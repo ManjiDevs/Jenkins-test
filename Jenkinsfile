@@ -1,5 +1,4 @@
 pipeline {
-
 agent any
 
 environment {
@@ -29,14 +28,13 @@ python -m compileall .
 
 stage('Build Docker Image') {
 steps {
-sh '''
-docker build -t $IMAGE_NAME .
-'''
+sh 'docker build -t $IMAGE_NAME .'
 }
 }
 
 stage('Deploy Container') {
 steps {
+withCredentials([string(credentialsId: 'BOT_TOKEN', variable: 'BOT_TOKEN')]) {
 sh '''
 docker stop $CONTAINER_NAME || true
 docker rm $CONTAINER_NAME || true
@@ -47,6 +45,7 @@ docker run -d \
 -e BOT_TOKEN=$BOT_TOKEN \
 $IMAGE_NAME
 '''
+}
 }
 }
 
