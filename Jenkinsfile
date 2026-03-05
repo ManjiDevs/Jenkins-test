@@ -18,20 +18,19 @@ stage('Test Code') {
 steps {
 sh '''
 docker run --rm \
--v /var/jenkins_home/workspace/Test:/app \
+-v /var/lib/docker/volumes/jenkins_home/_data/workspace/Test:/app \
 -w /app \
-python:3.11-slim \
-pip install -r requirements.txt
+python:3.11-slim pip install -r requirements.txt
+
 docker run --rm \
--v /var/jenkins_home/workspace/Test:/app \
+-v /var/lib/docker/volumes/jenkins_home/_data/workspace/Test:/app \
 -w /app \
-python:3.11-slim \
-python -m compileall .
+python:3.11-slim python -m compileall .
+
 docker run --rm \
--v /var/jenkins_home/workspace/Test:/app \
+-v /var/lib/docker/volumes/jenkins_home/_data/workspace/Test:/app \
 -w /app \
-python:3.11-slim \
-python -c "import main"
+python:3.11-slim python -c "import main"
 '''
 }
 }
