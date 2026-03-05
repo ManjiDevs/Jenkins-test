@@ -4,7 +4,7 @@ agent any
 environment {
 BOT_NAME = "jenkins-test-bot"
 IMAGE_NAME = "jenkins-test-bot"
-WORK_DIR = "/opt/bots/jenkins-test"
+WORK_DIR = "/demon-project/jenkins_test/Jenkins-test"
 }
 
 stages {
