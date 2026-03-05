@@ -4,14 +4,14 @@ agent any
 environment {
 BOT_NAME = "jenkins-test-bot"
 IMAGE_NAME = "jenkins-test-bot"
-WORK_DIR = "/demon-project/jenkins_test/Jenkins-test"
 }
 
 stages {
 
 stage('Pull Code') {
 steps {
-git 'https://github.com/ManjiDevs/Jenkins-test'
+git branch: 'main',
+url: 'https://github.com/ManjiDevs/Jenkins-test.git'
 }
 }
 
@@ -23,21 +23,21 @@ sh 'python3 -m py_compile main.py'
 
 stage('Build Docker Image') {
 steps {
-sh 'docker build -t $IMAGE_NAME .'
+sh 'docker build -t jenkins-test-bot .'
 }
 }
 
 stage('Deploy Container') {
 steps {
 sh '''
-docker stop $BOT_NAME || true
-docker rm $BOT_NAME || true
+docker stop jenkins-test-bot || true
+docker rm jenkins-test-bot || true
 
 docker run -d \
---name $BOT_NAME \
+--name jenkins-test-bot \
 --restart unless-stopped \
 --env-file /opt/bots/jenkins-test/.env \
-$IMAGE_NAME
+jenkins-test-bot
 '''
 }
 }
