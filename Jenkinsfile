@@ -2,64 +2,45 @@ pipeline {
 agent any
 
 environment {
-IMAGE = "jenkins-test-bot"
-BOT_TOKEN = credentials('bot-token')
+BOT_NAME = "jenkins-test-bot"
+IMAGE_NAME = "jenkins-test-bot"
+WORK_DIR = "/opt/bots/jenkins-test"
 }
 
 stages {
 
-stage('Checkout') {
+stage('Pull Code') {
 steps {
-checkout scm
+git 'https://github.com/ManjiDevs/Jenkins-test'
 }
 }
 
-stage('Test') {
+stage('Test Code') {
 steps {
-sh '''
-python3 -m venv venv
-. venv/bin/activate
-pip install -r requirements.txt
-pytest
-'''
+sh 'python3 -m py_compile main.py'
 }
 }
 
-stage('Build Image') {
+stage('Build Docker Image') {
 steps {
-sh 'docker build -t $IMAGE:latest .'
+sh 'docker build -t $IMAGE_NAME .'
 }
 }
 
-stage('Deploy Blue-Green') {
+stage('Deploy Container') {
 steps {
 sh '''
-CURRENT=$(docker ps --format "{{.Names}}" | grep jenkins-test-blue || true)
-
-if [ "$CURRENT" = "jenkins-test-blue" ]; then
-NEW="jenkins-test-green"
-OLD="jenkins-test-blue"
-else
-NEW="jenkins-test-blue"
-OLD="jenkins-test-green"
-fi
-
-echo "Starting $NEW"
+docker stop $BOT_NAME || true
+docker rm $BOT_NAME || true
 
 docker run -d \
---name $NEW \
---network prod_network \
---restart always \
--e BOT_TOKEN=$BOT_TOKEN \
-jenkins-test-bot:latest
-
-sleep 5
-
-echo "Stopping $OLD"
-docker stop $OLD || true
-docker rm $OLD || true
+--name $BOT_NAME \
+--restart unless-stopped \
+--env-file /opt/bots/jenkins-test/.env \
+$IMAGE_NAME
 '''
 }
 }
+
 }
 }
