@@ -22,7 +22,7 @@ docker run --rm \
 -v $PWD:/app \
 -w /app \
 python:3.11-slim \
-python -m py_compile main.py
+python -m compileall .
 '''
 }
 }
